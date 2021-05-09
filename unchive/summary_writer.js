@@ -40,7 +40,7 @@ export class SummaryWriter {
   static async generateSummmaryNodesForProject(project, summaryNodeList) {
 
     // A header node is added that lets the user download this generated summary.
-    this.header = new HeaderNode('Download summary', 'save_alt');
+    this.header = new HeaderNode('Download samenvatting', 'save_alt');
 		this.header.addStyleName('unchive-summary-node__header');
 		summaryNodeList.addNode(this.header);
 
@@ -49,22 +49,22 @@ export class SummaryWriter {
 		});
 
     summaryNodeList.addNodeAsync(SummaryNode.promiseNode(
-      'Stats',
+      'Statistieken',
       this.generateStats(project)));
     summaryNodeList.addNodeAsync(SummaryNode.promiseNode(
-      'Most used components',
+      'Meest gebruikte componenten',
       this.generateMostUsed(project)));
     summaryNodeList.addNodeAsync(SummaryNode.promiseNode(
-      '% of blocks by screen',
+      '% van het aantal blokken per scherm',
       this.generateCodeShare(project).getHTML()));
     summaryNodeList.addNodeAsync(SummaryNode.promiseNode(
-      'Assets by type',
+      'Media-bestanden per type',
       this.generateAssetTypeShare(project).getHTML()));
     summaryNodeList.addNodeAsync(SummaryNode.promiseNode(
-      '% of built-in components',
+      '% van ingebouwde componenten',
       this.generateNativeShare(project).getHTML()));
     summaryNodeList.addNodeAsync(SummaryNode.promiseNode(
-      'Block usage by type',
+      'Blokgebruik per type',
       this.getBlockTypeShare(project).getHTML()));
   }
 
@@ -84,10 +84,10 @@ export class SummaryWriter {
   static generateStats(project) {
     let html = new View('DIV');
     html.addView(new SummaryItem(
-      'Number of screens',
+      'Aantal schermen',
       project.screens.length));
     html.addView(new SummaryItem(
-      'Number of extensions',
+      'Aantal uitbreidingen',
       project.extensions.length));
 
     let totalBlockCount = 0;
@@ -97,7 +97,7 @@ export class SummaryWriter {
                           .getElementsByTagName('block')).length;
     }
     html.addView(new SummaryItem(
-      'Total number of blocks',
+      'Totaal aantal blokken',
       totalBlockCount));
 
     let assetSize = 0;
@@ -105,10 +105,10 @@ export class SummaryWriter {
       assetSize += asset.size;
     }
     html.addView(new SummaryItem(
-      'Number of assets',
+      'Aantal media-bestanden',
       project.assets.length));
     html.addView(new SummaryItem(
-      'Total size of assets',
+      'Totale grootte van de media-bestanden',
       AssetFormatter.formatSize(assetSize)));
 
 
@@ -393,7 +393,7 @@ class SummaryHTMLWriter {
   static writeProjectSummary(project) {
 
     // A dialog is shown while the user waits.
-    var dialog = new Dialog('Generating summary...', 'This may take a while');
+    var dialog = new Dialog('Samenvatting genereren...', 'Dit kan even duren');
     // The dialog has to be opened outside the event loop so that it doesn't wait
     // till everything is done before being opened.
     setTimeout(() => {dialog.open()}, 1);
@@ -403,12 +403,12 @@ class SummaryHTMLWriter {
       var html = [];
       var blobs = [];
       html.push('<html>');
-      html.push(`<head><title>Project Summary for ${project.name}</title></head>`);
+      html.push(`<head><title>Projectsamenvatting voor ${project.name}</title></head>`);
       html.push('<body>');
       html.push('<div style="text-align:center;width:100%;">');
-      html.push(`<h1 style="margin-bottom:0">${project.name} - Project Summary</h1>`);
+      html.push(`<h1 style="margin-bottom:0">${project.name} - Projectsamenvatting</h1>`);
       html.push('<h5 style="margin-top:0">');
-      html.push(`Summary generated on ${this.getDateTime()}`);
+      html.push(`Samenvatting gegenereerd op ${this.getDateTime()}`);
       html.push('</h5></div>');
 
       this.writeTOContents(html, project);
@@ -459,17 +459,17 @@ class SummaryHTMLWriter {
    * @param {AIProject} project The project for which the summary is to be downloaded.
    */
   static writeTOContents(html, project) {
-    html.push('<h3>Table of Contents</h3>');
+    html.push('<h3>Inhoud</h3>');
     html.push('<ol>');
-    html.push('<li><a href="#stats">Project stats</a></li>');
+    html.push('<li><a href="#stats">Project statistieken</a></li>');
     html.push('<li><a href="#insights">Insights</a></li>');
-    html.push('<li>Screens</li><ol>');
+    html.push('<li>Schermen</li><ol>');
     for(let screen of project.screens) {
       html.push(`<li><a href="#screen-${screen.name}">${screen.name}</a></li>`);
     }
     html.push('</ol>');
     if(project.extensions.length)
-      html.push('<li><a href="#exts">Extensions summary</a></li>');
+      html.push('<li><a href="#exts">Samenvatting uitbreidingen</a></li>');
     html.push('</ol>');
   }
 
@@ -485,11 +485,11 @@ class SummaryHTMLWriter {
    */
   static writeStats(html, project) {
     html.push('<a name="stats"></a>');
-    html.push('<h3>Project stats</h3>');
+    html.push('<h3>Project statistieken</h3>');
 
     html.push(SummaryWriter.generateStats(project).replace(/<p/g, '<li').replace(/\/p>/g, '/li>'));
 
-    html.push('<h4>Most used components</h4>');
+    html.push('<h4>Meest gebruikte componenten</h4>');
     html.push(SummaryWriter.generateMostUsed(project).replace(/<p/g, '<li').replace(/\/p>/g, '/li>'));
   }
 
